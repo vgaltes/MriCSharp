@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
@@ -11,7 +12,9 @@ namespace MriCSharp.App
     {
         public static IEnumerable<string> GetMethodNamesOf(string filePath)
         {
-            var code = System.IO.File.ReadAllText(filePath);
+            if (!File.Exists(filePath)) return Enumerable.Empty<string>();
+            
+            var code = File.ReadAllText(filePath);
             SyntaxTree tree = CSharpSyntaxTree.ParseText(code);
             var root = (CompilationUnitSyntax)tree.GetRoot();
 

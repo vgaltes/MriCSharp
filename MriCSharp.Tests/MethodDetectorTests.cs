@@ -15,5 +15,14 @@ namespace MriCSharp.Tests
 
             Assert.Equal(methodNames.Count(), 70);
         }
+
+        [Fact]
+        public void ShouldReturnAnEmptyListIfTheFileDoesntExist()
+        {
+            var filePath = "an/invalid/file.txt";
+            var methodNames = MethodDetector.GetMethodNamesOf(filePath);
+
+            Assert.Equal(methodNames.Count(), 0);
+        }
     }
 }
