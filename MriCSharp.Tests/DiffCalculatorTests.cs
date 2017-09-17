@@ -22,8 +22,26 @@ namespace MriCSharp.Tests
         {
             var diff = DiffCalculator.GetDiffBetween("Data/FileAfter.txt", "Data/FileAfter2.txt", "TestMethod");
 
-            Assert.Equal(diff.HasChanged, true);
-            Assert.Equal(diff.Churn, 5);
+            Assert.Equal(true, diff.HasChanged);
+            Assert.Equal(5, diff.Churn);
+        }
+
+        [Fact]
+        public void ShouldGetTheInfoOfTheSecondFileIfTheFirstOneDoesntExists()
+        {
+            var diff = DiffCalculator.GetDiffBetween("Data/NoFile.txt", "Data/FileAfter.txt", "TestMethod");
+
+            Assert.Equal(true, diff.HasChanged);
+            Assert.Equal(9, diff.Churn);
+        }
+
+        [Fact]
+        public void ShouldGetTheInfoOfTheFirstFileIfTheSecondOneDoesntExists()
+        {
+            var diff = DiffCalculator.GetDiffBetween("Data/FileAfter.txt", "Data/NoFile.txt", "TestMethod");
+
+            Assert.Equal(true, diff.HasChanged);
+            Assert.Equal(-9, diff.Churn);
         }
     }
 }

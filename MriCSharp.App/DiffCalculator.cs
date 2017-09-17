@@ -13,8 +13,8 @@ namespace MriCSharp.App
     {
         public static DiffResult GetDiffBetween(string fileBefore, string fileAfter, string methodName)
         {
-            var fileBeforeContents = File.ReadAllText(fileBefore);
-            var fileAfterContents = File.ReadAllText(fileAfter);
+            var fileBeforeContents = File.Exists(fileBefore) ? File.ReadAllText(fileBefore) : string.Empty;
+            var fileAfterContents = File.Exists(fileAfter) ? File.ReadAllText(fileAfter) : string.Empty;
 
             var codeBefore = GetMethodBody(fileBeforeContents, methodName);
             var codeAfter = GetMethodBody(fileAfterContents, methodName);
@@ -26,6 +26,40 @@ namespace MriCSharp.App
             var (haveChangedSharedLines, churnSharedLines) = GetDiffBetweenSharedLines(linesSharedBefore, linesSharedAfter);
 
             return new DiffResult(haveChangedSharedLines || haveChangedAfter || haveChangedBefore, churnSharedLines + churnAfter + churnBefore);
+        }
+
+        private static Tuple<bool, int, Dictionary<string, int>> GetDiffDataBetween(IEnumerable<string> codeFrom, IEnumerable<string> codeTo, Func<int, int> churnOperation)
+        {
+            var haveChanged = false;
+            var churn = 0;
+            var linesShared = new Dictionary<string, int>();
+
+            foreach (var lineFileFrom in codeFrom)
+            {
+                if (!codeTo.Contains(lineFileFrom))
+                {
+                    haveChanged = true;
+                    churn = churnOperation(churn);
+                }
+                else
+                {
+                    AddToLinesShared(linesShared, lineFileFrom);
+                }
+            }
+
+            return Tuple.Create(haveChanged, churn, linesShared);
+        }
+
+        private static void AddToLinesShared(Dictionary<string, int> linesSharedBefore, string lineFileBefore)
+        {
+            if (!linesSharedBefore.ContainsKey(lineFileBefore))
+            {
+                linesSharedBefore.Add(lineFileBefore, 1);
+            }
+            else
+            {
+                linesSharedBefore[lineFileBefore]++;
+            }
         }
 
         private static Tuple<bool, int> GetDiffBetweenSharedLines(IDictionary<string, int> sharedLinesFrom, IDictionary<string, int> sharedLinesTo)
@@ -46,40 +80,6 @@ namespace MriCSharp.App
             return Tuple.Create(haveChanged, churn);
         }
 
-        private static Tuple<bool, int, Dictionary<string, int>> GetDiffDataBetween(IEnumerable<string> codeFrom, IEnumerable<string> codeTo, Func<int, int> churnOperation)
-        {
-            var haveChanged = false;
-            var churn = 0;
-            var linesShared = new Dictionary<string, int>();
-
-            foreach (var lineFileBefore in codeFrom)
-            {
-                if (!codeTo.Contains(lineFileBefore))
-                {
-                    haveChanged = true;
-                    churn = churnOperation(churn);
-                }
-                else
-                {
-                    AddToLinesShared(linesShared, lineFileBefore);
-                }
-            }
-
-            return Tuple.Create(haveChanged, churn, linesShared);
-        }
-
-        private static void AddToLinesShared(Dictionary<string, int> linesSharedBefore, string lineFileBefore)
-        {
-            if (!linesSharedBefore.ContainsKey(lineFileBefore))
-            {
-                linesSharedBefore.Add(lineFileBefore, 1);
-            }
-            else
-            {
-                linesSharedBefore[lineFileBefore]++;
-            }
-        }
-
         private static IEnumerable<string> GetMethodBody(string code, string methodName)
         {
             SyntaxTree tree = CSharpSyntaxTree.ParseText(code);
@@ -91,8 +91,7 @@ namespace MriCSharp.App
 
             if (method != null)
             {                
-                //Console.Write(method.ToFullString());
-                return method.ToFullString().Split('\n').AsEnumerable();
+                return method.ToString().Split('\n');
             }
             
             return Enumerable.Empty<string>();
