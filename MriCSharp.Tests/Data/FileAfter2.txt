@@ -1,0 +1,27 @@
+namespace Test
+{
+    public class TestClass
+    {
+        private readonly IEnumerable<int> _numbers;
+
+        public TestClass(IEnumerable<int> numbers )
+        {
+            _numbers = numbers;
+        }
+
+        public IEnumerable<int> TestMethod(int factor, int sum, bool hasToSum)
+        {
+            if ( hasToSum )
+            {
+                return _numbers.Select(n => n * factor + sum);
+            }
+
+            if ( !hasToSum )
+            {
+                return _numbers.Select(n => n * factor - sum);
+            }
+            
+            return _numbers.Select(n => n * factor);
+        }
+    }
+}

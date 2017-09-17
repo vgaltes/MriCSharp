@@ -16,6 +16,9 @@
 
   <ItemGroup Condition="'$(Configuration)' == 'Debug'">
     <None Update="Data\ControllerActionInvokerTest.txt" CopyToOutputDirectory="PreserveNewest" />
+    <None Update="Data\FileBefore.txt" CopyToOutputDirectory="PreserveNewest" />
+    <None Update="Data\FileAfter.txt" CopyToOutputDirectory="PreserveNewest" />
+    <None Update="Data\FileAfter2.txt" CopyToOutputDirectory="PreserveNewest" />
  </ItemGroup>
 
 </Project>
