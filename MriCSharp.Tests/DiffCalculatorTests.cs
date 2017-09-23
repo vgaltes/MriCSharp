@@ -14,7 +14,7 @@ namespace MriCSharp.Tests
             var diff = DiffCalculator.GetDiffBetween("Data/FileBefore.txt", "Data/FileAfter.txt", "TestMethod");
 
             Assert.Equal(true, diff.HasChanged);
-            Assert.Equal(5, diff.Churn);
+            Assert.Equal(7, diff.Churn);
         }
 
         [Fact]
@@ -41,7 +41,7 @@ namespace MriCSharp.Tests
             var diff = DiffCalculator.GetDiffBetween("Data/FileAfter.txt", "Data/NoFile.txt", "TestMethod");
 
             Assert.Equal(true, diff.HasChanged);
-            Assert.Equal(-9, diff.Churn);
+            Assert.Equal(9, diff.Churn);
         }
     }
 }

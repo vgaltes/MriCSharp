@@ -19,7 +19,7 @@ namespace MriCSharp.App
             var codeBefore = GetMethodBody(fileBeforeContents, methodName);
             var codeAfter = GetMethodBody(fileAfterContents, methodName);
 
-            var (haveChangedBefore, churnBefore, linesSharedBefore) = GetDiffDataBetween(codeBefore, codeAfter, (c) => c -= 1);
+            var (haveChangedBefore, churnBefore, linesSharedBefore) = GetDiffDataBetween(codeBefore, codeAfter, (c) => c += 1);
 
             var (haveChangedAfter, churnAfter, linesSharedAfter) = GetDiffDataBetween(codeAfter, codeBefore, (c) => c += 1);
 
