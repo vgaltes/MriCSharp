@@ -85,13 +85,14 @@ namespace MriCSharp.App
             SyntaxTree tree = CSharpSyntaxTree.ParseText(code);
             var root = (CompilationUnitSyntax)tree.GetRoot();
 
-            var method = root.DescendantNodes()
+            var methods = root.DescendantNodes()
                                  .OfType<MethodDeclarationSyntax>()
-                                 .FirstOrDefault(n => n.Identifier.ValueText == methodName);
+                                 .Where(n => n.Identifier.ValueText == methodName);
 
-            if (method != null)
-            {                
-                return method.ToString().Split('\n');
+            if (methods.Count() > 0)
+            {
+                var allTogether = string.Join("\n", methods.Select(m => m.ToString()));                
+                return allTogether.Split('\n');
             }
             
             return Enumerable.Empty<string>();

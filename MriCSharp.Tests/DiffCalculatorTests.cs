@@ -43,5 +43,14 @@ namespace MriCSharp.Tests
             Assert.Equal(true, diff.HasChanged);
             Assert.Equal(9, diff.Churn);
         }
+
+        [Fact]
+        public void ShouldGetTheInfoOfOverloadedMethod()
+        {
+            var diff = DiffCalculator.GetDiffBetween("Data/Before.txt", "Data/ControllerActionInvokerTest.txt", "CreateInvoker");
+
+            Assert.Equal(true, diff.HasChanged);
+            Assert.Equal(170, diff.Churn);
+        }
     }
 }
