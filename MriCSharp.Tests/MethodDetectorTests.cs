@@ -13,7 +13,7 @@ namespace MriCSharp.Tests
             var filePath = "Data/ControllerActionInvokerTest.txt";
             var methodNames = MethodDetector.GetMethodNamesOf(filePath);
 
-            Assert.Equal(methodNames.Count(), 70);
+            Assert.Equal(methodNames.Count(), 68);
         }
 
         [Fact]

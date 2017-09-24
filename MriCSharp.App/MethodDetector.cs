@@ -20,7 +20,8 @@ namespace MriCSharp.App
 
             return root.DescendantNodes()
                     .OfType<MethodDeclarationSyntax>()
-                    .Select(m => m.Identifier.ValueText);
+                    .Select(m => m.Identifier.ValueText)
+                    .Distinct();
         }
     }
 }
